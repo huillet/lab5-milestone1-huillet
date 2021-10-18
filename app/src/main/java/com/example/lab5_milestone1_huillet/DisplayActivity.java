@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,14 +15,20 @@ import android.widget.TextView;
 
 public class DisplayActivity extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String usernameKey = "username";
+
         setContentView(R.layout.display_activity);
 
         TextView welcomeText = findViewById(R.id.welcomeText);
         Intent intent = getIntent();
-        String str = intent.getStringExtra("message");
+        //String str = intent.getStringExtra("message");
+        sharedPreferences = getSharedPreferences("notes", Context.MODE_PRIVATE);
+        String str = sharedPreferences.getString(usernameKey, "");
         welcomeText.setText("Welcome " + str + "!");
     }
 
@@ -36,10 +44,10 @@ public class DisplayActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.logout:
+                sharedPreferences.edit().remove("username").apply();
                 goToMainActivity();
                 break;
             case R.id.add:
-
                 break;
         }
         return super.onOptionsItemSelected(item);
